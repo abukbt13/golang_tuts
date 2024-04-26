@@ -5,7 +5,7 @@ import "fmt"
 func main() {
 
 	var Students = [5]string{"abraham", "kibet", "jacob", "Aooron", "kkqwjk"}
-	// fmt.Print(Students[2])
+	fmt.Print(Students[2])
 
 	// fmt.Println("Welcome to GoLang successs !!!!!!")
 	// var name = "Abraham Kibet"
