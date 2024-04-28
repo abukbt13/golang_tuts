@@ -27,6 +27,7 @@ func main() {
 	r.HandleFunc("/user/{id}", getUserHandler).Methods("GET")
 	r.HandleFunc("/user/{id}", updateUserHandler).Methods("PUT")
 	r.HandleFunc("/user/{id}", deleteUserHandler).Methods("DELETE")
+	r.HandleFunc("/show/all", showUsers).Methods("GET")
 
 	// Start the HTTP server on port 8090
 	log.Println("Server listening on :8090")
@@ -105,6 +106,45 @@ func GetUser(db *sql.DB, id int) (*User, error) {
 	}
 	return user, nil
 }
+
+func showUsers(w http.ResponseWriter, r *http.Request) {
+	db, err := sql.Open(dbDriver, dbUser+":"+dbPass+"@/"+dbName)
+	if err != nil {
+		panic(err.Error())
+	}
+	defer db.Close()
+
+	// Query all users from the database
+	rows, err := db.Query("SELECT id, name, email FROM users")
+	if err != nil {
+		http.Error(w, "Failed to fetch users", http.StatusInternalServerError)
+		return
+	}
+	defer rows.Close()
+
+	// Iterate through the rows and build a slice of User objects
+	var users []User
+	for rows.Next() {
+		var user User
+		err := rows.Scan(&user.ID, &user.Name, &user.Email)
+		if err != nil {
+			http.Error(w, "Failed to fetch users", http.StatusInternalServerError)
+			return
+		}
+		users = append(users, user)
+	}
+
+	// Check for errors during row iteration
+	if err := rows.Err(); err != nil {
+		http.Error(w, "Failed to fetch users", http.StatusInternalServerError)
+		return
+	}
+
+	// Encode the slice of User objects to JSON and send it in the response
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(users)
+}
+
 func updateUserHandler(w http.ResponseWriter, r *http.Request) {
 	db, err := sql.Open(dbDriver, dbUser+":"+dbPass+"@/"+dbName)
 	if err != nil {
