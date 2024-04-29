@@ -9,12 +9,12 @@ import (
 	"log"
 	"net/http"
 	"strconv"
-);
+)
 
 const (
 	dbDriver = "mysql"
 	dbUser   = "root"
-	dbPass   = "Susan@2022"
+	dbPass   = ""
 	dbName   = "gocrud_app"
 ) //database connection
 
