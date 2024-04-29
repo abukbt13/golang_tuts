@@ -5,8 +5,17 @@ import "fmt"
 func main() {
 
 	var Students = [5]string{"abraham", "kibet", "jacob", "Aooron", "kkqwjk"}
-	fmt.Print(Students[2])
+	fmt.Println(Students[2])
 
+	// fmt.Printf("The aray length %v", len(Students))
+	scores := []string{"jjkdjks", "njwknjknwdk"}
+
+	// Append elements to the slice
+	scores = append(scores, "Gideon", "Victor")
+
+	// Print the updated slice
+	fmt.Println("The scores", scores)
+	fmt.Println(len(scores))
 	// fmt.Println("Welcome to GoLang successs !!!!!!")
 	// var name = "Abraham Kibet"
 	// var age = "26"
