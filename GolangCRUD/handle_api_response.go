@@ -6,7 +6,7 @@ import (
         "net/http"
 //         "encoding/json"
         "log"
-        "io"
+        "io/ioutil"
 )
 
 
@@ -22,31 +22,15 @@ import (
 
 func ProductsHandler(w http.ResponseWriter, r *http.Request) {
 	// Replace with the actual API URL for products
-	apiURL := "https://dummyjson.com/products/4"
+	apiURL := "https://dummyjson.com/produts/4"
 
 	// Make HTTP request to the API
 	response, err := http.Get(apiURL)
+    responseData, err := ioutil.ReadAll(response.Body)
 	if err != nil {
-		http.Error(w, fmt.Sprintf("Error fetching data: %v", err), http.StatusInternalServerError)
-		return
+		log.Fatal(err)
 	}
-	defer response.Body.Close()
-
-	// Check if the response status code is not 200 OK
-	if response.StatusCode != http.StatusOK {
-		http.Error(w, fmt.Sprintf("Error fetching data: API returned status code %d", response.StatusCode), http.StatusInternalServerError)
-		return
-	}
-
-	// Set the Content-Type header of the response to application/json
-	w.Header().Set("Content-Type", "application/json")
-
-	// Copy the response body to the response writer
-	_, err = io.Copy(w, response.Body)
-	if err != nil {
-		http.Error(w, fmt.Sprintf("Error copying response: %v", err), http.StatusInternalServerError)
-		return
-	}
+    fmt.Println(responseData)
 }
 
 
@@ -55,6 +39,6 @@ func ProductsHandler(w http.ResponseWriter, r *http.Request) {
         r := mux.NewRouter()
 
         r.HandleFunc("/products",ProductsHandler).Methods("GET")
-        log.Println("Server listening on :8000")
-        log.Fatal(http.ListenAndServe(":8000", r))
+        log.Println("Server listening on :8080")
+        log.Fatal(http.ListenAndServe(":8080", r))
     }
